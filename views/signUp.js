@@ -1,17 +1,39 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import * as SQLite from "expo-sqlite";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
 export default function SignUp() {
   // const [count, setCount] = useState(0);
+  const db = SQLite.openDatabase("db.db");
 
   return (
     <View style={styles.container}>
       <Formik
         initialValues={{ email: "", password: "", confirmPassword: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values) => {
+          db.transaction((tx) => {
+            tx.executeSql(
+              "create table if not exists items (id integer primary key not null, email text, password text);"
+            );
+            tx.executeSql("insert into items (email, password) values (?, ?)", [
+              values.email,
+              values.password,
+            ]);
+            // tx.executeSql("select * from items", [], (_, { rows }) =>
+            //   console.log(rows)
+            // );
+          }, null);
+        }}
         validationSchema={yup.object().shape({
           email: yup
             .string()
@@ -95,6 +117,12 @@ export default function SignUp() {
               // disabled={isValid}
               onPress={handleSubmit}
             />
+            <View>
+              <Text>go to</Text>
+              <TouchableOpacity>
+                <Text>login</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </Formik>
