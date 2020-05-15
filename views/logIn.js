@@ -15,12 +15,50 @@ import * as yup from "yup";
 export default function logIn({ route, navigation }) {
   const db = SQLite.openDatabase("db.db");
 
+  db.transaction((tx) => {
+    // tx.executeSql("select * from items", [], (_, { rows }) =>
+    //   console.log(rows)
+    // );
+    tx.executeSql(
+      "SELECT * FROM items WHERE email = 'daniel.reverol@gmail.com';",
+      [],
+      (_, { rows }) => console.log(rows)
+    );
+  }, null);
+
   return (
     <View style={styles.container}>
       <Formik
-        initialValues={{ email: "", password: ""}}
+        initialValues={{ email: "", password: "" }}
         onSubmit={(values) => {
-          Alert.alert(`Bienvenido ${values.email}`);
+          db.transaction((tx) => {
+            tx.executeSql(
+              "SELECT EXISTS(SELECT 1 FROM items WHERE email=(?));",
+              [values.email],
+              (_, { rows }) => {
+                console.log(Object.values(rows._array[0])[0]);
+                if (Object.values(rows._array[0])[0] > 0) {
+                  tx.executeSql(
+                    "SELECT * FROM items WHERE email = (?);",
+                    [values.email],
+                    (_, { rows }) => {
+                      console.log(rows._array[0].password);
+                      if (rows._array[0].password === values.password) {
+                        Alert.alert(`Welcome ${values.email}`);
+                      } else {
+                        Alert,alert('Incorrect Password')
+                      }
+                    }
+                  );
+                } else {
+                  Alert.alert(
+                    `${values.email}`,
+                    "this email is not in our database"
+                  );
+                }
+              }
+            );
+          }, null);
         }}
         validationSchema={yup.object().shape({
           email: yup
