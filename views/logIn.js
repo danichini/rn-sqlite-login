@@ -12,51 +12,15 @@ import * as SQLite from "expo-sqlite";
 import { Formik } from "formik";
 import * as yup from "yup";
 
-export default function SignUp({ navigation }) {
+export default function logIn({ route, navigation }) {
   const db = SQLite.openDatabase("db.db");
-
-  // db.transaction((tx) => {
-  //   // tx.executeSql("select * from items", [], (_, { rows }) =>
-  //   //   console.log(rows)
-  //   // );
-  //   tx.executeSql(
-  //     "SELECT EXISTS(SELECT 1 FROM items WHERE email='D@m.com');",
-  //     [],
-  //     (_, { rows }) => console.log(Object.values(rows._array[0])[0])
-  //   );
-  // }, null);
 
   return (
     <View style={styles.container}>
       <Formik
-        initialValues={{ email: "", password: "", confirmPassword: "" }}
+        initialValues={{ email: "", password: ""}}
         onSubmit={(values) => {
-          db.transaction((tx) => {
-            tx.executeSql(
-              "create table if not exists items (id integer primary key not null, email text, password text);"
-            );
-            tx.executeSql(
-              "SELECT EXISTS(SELECT 1 FROM items WHERE email=(?));",
-              [values.email],
-              (_, { rows }) => {
-                console.log(Object.values(rows._array[0])[0]);
-                if (Object.values(rows._array[0])[0] > 0) {
-                  Alert.alert(
-                    `The email ${values.email} is already in the database`
-                  );
-                } else {
-                  tx.executeSql(
-                    "insert into items (email, password) values (?, ?)",
-                    [values.email, values.password]
-                  );
-                  navigation.navigate("Login", {
-                    email: values.email,
-                    password: values.password,
-                  });
-                }
-              }
-            );
-          }, null);
+          Alert.alert(`Bienvenido ${values.email}`);
         }}
         validationSchema={yup.object().shape({
           email: yup
@@ -69,17 +33,8 @@ export default function SignUp({ navigation }) {
             .required()
             .matches(
               /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*..?&])[A-Za-z\d@$!%..*?&]{8,}$/,
-              "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
+              "Must Contain 8 Characters, One Uppercase, One Number and one special case Character"
             ),
-          confirmPassword: yup
-            .string()
-            .required()
-            .label("Confirm password")
-            .test("passwords-match", "Passwords must match ya fool", function (
-              value
-            ) {
-              return this.parent.password === value;
-            }),
         })}
       >
         {({
@@ -121,30 +76,15 @@ export default function SignUp({ navigation }) {
                 </Text>
               )}
             </View>
-            <View>
-              <TextInput
-                style={styles.textInputStyle}
-                value={values.confirmPassword}
-                onChangeText={handleChange("confirmPassword")}
-                onBlur={() => setFieldTouched("confirmPassword")}
-                placeholder="Confirm password"
-                secureTextEntry={true}
-              />
-              {touched.confirmPassword && errors.confirmPassword && (
-                <Text style={{ fontSize: 10, color: "red" }}>
-                  {errors.confirmPassword}
-                </Text>
-              )}
-            </View>
             <Button
-              title="Sign In"
+              title="Log In"
               // disabled={isValid}
               onPress={handleSubmit}
             />
             <View>
               <Text>go to</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                <Text>login</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+                <Text>sign up</Text>
               </TouchableOpacity>
             </View>
           </View>

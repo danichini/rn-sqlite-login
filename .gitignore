@@ -10,5 +10,6 @@ npm-debug.*
 web-build/
 web-report/
 notes.txt
+ex/jk
 # macOS
 .DS_Store
