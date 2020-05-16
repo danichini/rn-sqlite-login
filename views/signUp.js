@@ -15,17 +15,6 @@ import * as yup from "yup";
 export default function SignUp({ navigation }) {
   const db = SQLite.openDatabase("db.db");
 
-  // db.transaction((tx) => {
-  //   // tx.executeSql("select * from items", [], (_, { rows }) =>
-  //   //   console.log(rows)
-  //   // );
-  //   tx.executeSql(
-  //     "SELECT EXISTS(SELECT 1 FROM items WHERE email='D@m.com');",
-  //     [],
-  //     (_, { rows }) => console.log(Object.values(rows._array[0])[0])
-  //   );
-  // }, null);
-
   return (
     <View style={styles.container}>
       <Formik
@@ -39,7 +28,6 @@ export default function SignUp({ navigation }) {
               "SELECT EXISTS(SELECT 1 FROM items WHERE email=(?));",
               [values.email],
               (_, { rows }) => {
-                console.log(Object.values(rows._array[0])[0]);
                 if (Object.values(rows._array[0])[0] > 0) {
                   Alert.alert(
                     `The email ${values.email} is already in the database`
