@@ -12,12 +12,12 @@ export default function MyStack() {
       <Stack.Screen
         name="SignUp"
         component={SignUp}
-        options={{ title: "SignUp" }}
+        options={{ title: "SignUp", headerShown: false }}
       />
       <Stack.Screen
         name="Login"
         component={Login}
-        options={{ title: "Login" }}
+        options={{ title: "Login", headerShown: false }}
       />
     </Stack.Navigator>
   );
