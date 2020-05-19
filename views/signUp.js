@@ -70,7 +70,7 @@ export default function SignUp({ navigation }) {
               .label("Confirm password")
               .test(
                 "passwords-match",
-                "Passwords must match ya fool",
+                "Passwords must match",
                 function (value) {
                   return this.parent.password === value;
                 }
