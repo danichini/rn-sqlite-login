@@ -9,7 +9,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon.svg",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -22,7 +22,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.danichini.reactCrudTest",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.danichini.reactCrudTest",
+      "versionCode": 1
     }
   }
 }
